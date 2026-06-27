@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>QA Maturity Assessment</title>
+<meta name="description" content="A structured QA maturity self-assessment across five dimensions, grounded in ISTQB CTFL 4.0 principles and the CT-AI / CT-GenAI specialist syllabuses. Score 15-60." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --paper:#F7F9F8; --panel:#FFFFFF; --ink:#15201B; --slate:#4C5953;
+    --emerald:#157A4E; --emerald-deep:#0D5234; --mint:#EAF2EE; --line:#DBE5DF;
+    --amber:#B8791B; --red:#B0432F;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--paper);color:var(--ink);font-family:"Inter",system-ui,sans-serif;line-height:1.6;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:680px;margin:0 auto;padding:0 24px 64px}
+  .mono{font-family:"JetBrains Mono",monospace}
+  h1,h2,h3{font-family:"Space Grotesk",sans-serif;letter-spacing:-.02em;line-height:1.15}
+  a{color:var(--emerald-deep)}
+  .hidden{display:none}
+
+  header{padding:44px 0 14px}
+  .eyebrow{font-family:"JetBrains Mono",monospace;font-size:.78rem;color:var(--emerald);display:flex;align-items:center;gap:9px;margin-bottom:14px;text-transform:uppercase;letter-spacing:.06em}
+  .dot{width:8px;height:8px;border-radius:50%;background:var(--emerald);box-shadow:0 0 0 0 rgba(21,122,78,.5);animation:pulse 2s infinite}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(21,122,78,.5)}70%{box-shadow:0 0 0 10px rgba(21,122,78,0)}100%{box-shadow:0 0 0 0 rgba(21,122,78,0)}}
+  header h1{font-size:clamp(1.9rem,5vw,2.6rem);font-weight:700}
+  header p{color:var(--slate);margin-top:12px;font-size:1.05rem}
+
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:30px;margin-top:24px;box-shadow:0 18px 40px -30px rgba(13,82,52,.4)}
+
+  .meta-list{list-style:none;margin:18px 0 26px}
+  .meta-list li{padding:13px 0;border-bottom:1px solid var(--line);display:flex;gap:14px;align-items:flex-start;font-size:.96rem}
+  .meta-list li:last-child{border-bottom:none}
+  .meta-list b{font-family:"Space Grotesk",sans-serif;color:var(--ink);display:block}
+  .meta-list .d{color:var(--slate);font-size:.9rem}
+  .num{color:var(--emerald);font-family:"JetBrains Mono",monospace;flex-shrink:0;font-weight:500}
+
+  .btn{font-family:"Space Grotesk",sans-serif;font-weight:600;font-size:1rem;border:none;border-radius:10px;padding:14px 26px;cursor:pointer;transition:transform .12s ease,box-shadow .12s ease}
+  .btn-primary{background:var(--emerald);color:#fff;box-shadow:0 10px 24px -12px rgba(21,122,78,.7)}
+  .btn-primary:hover{transform:translateY(-1px);box-shadow:0 14px 28px -12px rgba(21,122,78,.8)}
+  .btn-ghost{background:transparent;color:var(--emerald-deep);border:1px solid var(--line)}
+  .btn-ghost:hover{background:var(--mint)}
+
+  .scalekey{margin:8px 0 4px;font-size:.86rem;color:var(--slate)}
+  .scalekey span{font-family:"JetBrains Mono",monospace;color:var(--emerald-deep)}
+
+  .progress{font-family:"JetBrains Mono",monospace;font-size:.82rem;color:var(--slate);display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+  .pbar{height:5px;background:var(--mint);border-radius:99px;overflow:hidden;margin-bottom:24px}
+  .pbar i{display:block;height:100%;background:var(--emerald);border-radius:99px;transition:width .35s ease;width:0}
+
+  .qdim{font-family:"JetBrains Mono",monospace;font-size:.74rem;color:var(--emerald);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px}
+  .qtext{font-family:"Space Grotesk",sans-serif;font-weight:600;font-size:1.28rem;margin-bottom:22px}
+  .opt{display:flex;align-items:center;gap:14px;width:100%;text-align:left;background:var(--panel);border:1px solid var(--line);border-radius:11px;padding:14px 16px;margin-bottom:11px;cursor:pointer;font-size:.98rem;color:var(--ink);transition:border-color .12s ease,background .12s ease}
+  .opt:hover{border-color:var(--emerald);background:var(--mint)}
+  .opt.sel{border-color:var(--emerald);background:var(--mint);box-shadow:inset 0 0 0 1px var(--emerald)}
+  .opt .chip{font-family:"JetBrains Mono",monospace;font-weight:600;width:30px;height:30px;flex-shrink:0;border-radius:8px;background:var(--mint);color:var(--emerald-deep);display:flex;align-items:center;justify-content:center}
+  .opt.sel .chip{background:var(--emerald);color:#fff}
+  .navrow{display:flex;justify-content:space-between;margin-top:22px;gap:12px}
+
+  .score-hero{text-align:center;padding:6px 0 4px}
+  .score-num{font-family:"Space Grotesk",sans-serif;font-weight:700;font-size:5rem;line-height:1;color:var(--emerald-deep)}
+  .score-num small{font-size:1.6rem;color:var(--slate);font-weight:500}
+  .score-band{font-family:"JetBrains Mono",monospace;font-size:1rem;color:var(--slate);margin-top:4px}
+  .score-sub{color:var(--slate);margin-top:14px;font-size:.98rem}
+
+  .dimrow{margin-top:22px}
+  .dimrow .top{display:flex;justify-content:space-between;align-items:baseline;font-size:.96rem}
+  .dimrow .top b{font-family:"Space Grotesk",sans-serif}
+  .dimrow .pct{font-family:"JetBrains Mono",monospace;font-size:.84rem;color:var(--slate)}
+  .dbar{height:8px;background:var(--mint);border-radius:99px;overflow:hidden;margin:7px 0 6px}
+  .dbar i{display:block;height:100%;border-radius:99px;width:0;transition:width .6s cubic-bezier(.2,.7,.2,1)}
+  .note{font-size:.9rem;color:var(--slate)}
+
+  .method{margin-top:26px;background:var(--mint);border-radius:14px;padding:20px 22px}
+  .method b{font-family:"Space Grotesk",sans-serif;color:var(--emerald-deep);display:block;margin-bottom:6px}
+  .method p{font-size:.88rem;color:var(--slate)}
+  .method .indep{font-style:italic;font-size:.82rem;margin-top:8px}
+
+  footer{margin-top:24px;padding-top:18px;border-top:1px solid var(--line);font-size:.82rem;color:var(--slate);text-align:center}
+  .assert{font-family:"JetBrains Mono",monospace;font-size:.8rem;color:var(--emerald);margin-top:10px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="eyebrow"><span class="dot"></span> QA MATURITY ASSESSMENT</div>
+    <h1>How mature is your QA?</h1>
+    <p>A structured self-assessment across the five dimensions that determine testing maturity. Grounded in ISTQB Foundation Level (CTFL 4.0) principles and the AI testing specialist syllabuses.</p>
+  </header>
+
+  <!-- INTRO -->
+  <section id="intro" class="card">
+    <ul class="meta-list">
+      <li><span class="num">01</span><span><b>Test Strategy &amp; Risk</b><span class="d">What you test, and why, decided by risk.</span></span></li>
+      <li><span class="num">02</span><span><b>Test Design &amp; Coverage</b><span class="d">How rigorously you derive and measure tests.</span></span></li>
+      <li><span class="num">03</span><span><b>Automation &amp; Continuous Testing</b><span class="d">How much of the safety net runs in CI/CD.</span></span></li>
+      <li><span class="num">04</span><span><b>Whole-Team Quality</b><span class="d">Whether quality is shared or siloed.</span></span></li>
+      <li><span class="num">05</span><span><b>AI in Quality</b><span class="d">How deliberately you use, and test, AI.</span></span></li>
+    </ul>
+    <p style="color:var(--slate);font-size:.92rem;margin-bottom:22px">15 statements &middot; rate each 1&ndash;4 &middot; about 3 minutes &middot; no signup, nothing stored.</p>
+    <button class="btn btn-primary" onclick="start()">Start assessment &rarr;</button>
+  </section>
+
+  <!-- QUIZ -->
+  <section id="quiz" class="card hidden">
+    <div class="progress"><span id="pcount">Statement 1 of 15</span><span id="pdim">Test Strategy &amp; Risk</span></div>
+    <div class="pbar"><i id="pfill"></i></div>
+    <div class="qdim" id="qdim">TEST STRATEGY &amp; RISK</div>
+    <div class="qtext" id="qtext"></div>
+    <div id="opts"></div>
+    <div class="navrow">
+      <button class="btn btn-ghost" id="backbtn" onclick="back()">&larr; Back</button>
+      <span></span>
+    </div>
+  </section>
+
+  <!-- RESULTS -->
+  <section id="results" class="card hidden">
+    <div class="score-hero">
+      <div class="score-num"><span id="scoreNum">0</span><small> / 60</small></div>
+      <div class="score-band" id="scoreBand">&mdash;</div>
+      <p class="score-sub" id="scoreSub"></p>
+    </div>
+    <div id="dims" style="margin-top:26px"></div>
+    <div class="navrow" style="margin-top:30px">
+      <button class="btn btn-ghost" onclick="restart()">&#8634; Retake</button>
+      <button class="btn btn-primary" onclick="copyShare()">Copy my score</button>
+    </div>
+    <div class="method">
+      <b>A note on method</b>
+      <p>This self-assessment draws on ISTQB Foundation Level (CTFL 4.0) principles &mdash; shift-left testing, risk-based prioritization, and whole-team quality &mdash; together with the AI Testing (CT-AI) and Testing with Generative AI (CT-GenAI) specialist syllabuses.</p>
+      <p class="indep">An independent guide. Not affiliated with or endorsed by ISTQB.</p>
+    </div>
+    <footer>
+      <div class="assert">// expect(yourTeam).toShipWithConfidence()</div>
+    </footer>
+  </section>
+
+</div>
+
+<script>
+const DIMENSIONS = [
+  { name: "Test Strategy & Risk",            key: "TEST STRATEGY & RISK" },
+  { name: "Test Design & Coverage",          key: "TEST DESIGN & COVERAGE" },
+  { name: "Automation & Continuous Testing", key: "AUTOMATION & CONTINUOUS TESTING" },
+  { name: "Whole-Team Quality",              key: "WHOLE-TEAM QUALITY" },
+  { name: "AI in Quality",                   key: "AI IN QUALITY" },
+];
+
+// 15 statements, 3 per dimension. Rated 1-4 (matches carousel).
+const STATEMENTS = [
+  { dim:0, q:"Testing is prioritized by risk and business impact, not feature order." },
+  { dim:0, q:"Scope, objectives, and entry/exit criteria are defined before execution." },
+  { dim:0, q:"Testing starts early; requirements and designs are reviewed, not just code." },
+
+  { dim:1, q:"Test cases use structured techniques, not just intuition or repetition." },
+  { dim:1, q:"Coverage is measured against criteria, so we know what is and isn't tested." },
+  { dim:1, q:"Exploratory testing complements scripted tests in new or high-risk areas." },
+
+  { dim:2, q:"Automation follows the test pyramid, not just UI tests piled on top." },
+  { dim:2, q:"Automated tests run in the CI/CD pipeline and gate releases automatically." },
+  { dim:2, q:"The suite is maintainable and trusted; a red result is a real signal." },
+
+  { dim:3, q:"Quality is a shared, whole-team responsibility, not a QA silo." },
+  { dim:3, q:"Acceptance criteria and ATDD prevent defects before development." },
+  { dim:3, q:"Defects feed a blameless loop that adds guardrails and improves process." },
+
+  { dim:4, q:"AI-assisted tools are used deliberately, with human review of their output." },
+  { dim:4, q:"The team understands prompt engineering and generative AI's limits." },
+  { dim:4, q:"Where the product uses AI/ML, we test for bias, non-determinism, and drift." },
+];
+
+// 1-4 scale (matches the carousel "How to score" slide)
+const SCALE = [
+  [1, "Not us — ad hoc or absent"],
+  [2, "Sometimes, informally"],
+  [3, "Mostly true, repeatable"],
+  [4, "Consistent and by design"],
+];
+
+// Total range 15-60
+const BANDS = [
+  { min:15, label:"Initial",    blurb:"Quality is reactive and depends on individuals. Establish a risk-based strategy and a regression safety net you can trust." },
+  { min:27, label:"Managed",    blurb:"Practices exist but lean on key people. Standardize test design, move automation into CI, and share ownership across the team." },
+  { min:39, label:"Defined",    blurb:"Repeatable, well-structured quality. Strengthen shift-left collaboration, risk-based coverage, and feedback from production." },
+  { min:51, label:"Optimizing", blurb:"Quality is engineered into delivery. Focus the frontier on faster feedback, AI-assisted testing, and continuous learning." },
+];
+
+// Per-dimension feedback. level: low / mid / high. Index = dimension.
+const NOTES = {
+  low: [
+    "Testing isn't yet risk-driven. Define scope, objectives, and entry/exit criteria, and prioritize by business impact before execution.",
+    "Tests lean on intuition. Adopt structured techniques and measure coverage so you know what is and isn't tested.",
+    "Automation is thin or untrusted. Start with the test pyramid and get a reliable smoke suite running in CI.",
+    "Quality is siloed in QA. Pull testers into refinement and define acceptance criteria up front to prevent defects.",
+    "AI is used ad hoc or not at all. Introduce AI-assisted testing deliberately, with human review, and learn its limits.",
+  ],
+  mid: [
+    "A strategy exists but isn't consistent. Push risk-based prioritization earlier and review requirements, not just code.",
+    "Techniques are used unevenly. Standardize design and pair scripted coverage with exploratory testing on risky areas.",
+    "Automation helps but isn't fully wired in. Move tests into CI/CD gating and invest in stability over volume.",
+    "Ownership is improving. Strengthen ATDD and make defect retros blameless and improvement-focused.",
+    "AI use is growing but informal. Build prompt-engineering skill and start testing any AI/ML features for bias and drift.",
+  ],
+  high: [
+    "Strong, risk-led strategy. Keep tightening early reviews so defects are prevented, not just caught.",
+    "Rigorous, measured design. Keep pruning low-value tests so the suite stays a signal, not a chore.",
+    "Automation is a real safety net. Watch speed and flakiness so it stays trusted as you scale.",
+    "Quality is genuinely shared. Keep QA enabling the team rather than gatekeeping at the end.",
+    "AI is used and tested with intent. Keep oversight tight and monitor model behavior, non-determinism, and drift.",
+  ],
+};
+
+const $ = (id) => document.getElementById(id);
+let current = 0;
+const answers = new Array(STATEMENTS.length).fill(null); // stores 1-4
+
+function start(){
+  $("intro").classList.add("hidden");
+  $("quiz").classList.remove("hidden");
+  current = 0;
+  render();
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function render(){
+  const item = STATEMENTS[current];
+  const dim = DIMENSIONS[item.dim];
+  $("pcount").textContent = `Statement ${current+1} of ${STATEMENTS.length}`;
+  $("pdim").textContent = dim.name;
+  $("qdim").textContent = dim.key;
+  $("qtext").textContent = item.q;
+  $("pfill").style.width = (current / STATEMENTS.length * 100) + "%";
+  $("backbtn").style.visibility = current === 0 ? "hidden" : "visible";
+
+  const box = $("opts");
+  box.innerHTML = "";
+  SCALE.forEach(([val, label]) => {
+    const b = document.createElement("button");
+    b.className = "opt" + (answers[current] === val ? " sel" : "");
+    b.innerHTML = `<span class="chip">${val}</span><span>${label}</span>`;
+    b.onclick = () => choose(val);
+    box.appendChild(b);
+  });
+}
+
+function choose(val){
+  answers[current] = val;
+  render();
+  setTimeout(() => {
+    if (current < STATEMENTS.length - 1){ current++; render(); }
+    else finish();
+  }, 170);
+}
+
+function back(){ if (current > 0){ current--; render(); } }
+
+function finish(){
+  const raw = [0,0,0,0,0];     // sum per dimension (3-12)
+  const counts = [0,0,0,0,0];
+  STATEMENTS.forEach((item, idx) => {
+    raw[item.dim] += (answers[idx] ?? 1);
+    counts[item.dim] += 1;
+  });
+  const total = raw.reduce((a,b)=>a+b,0);   // 15-60
+
+  $("quiz").classList.add("hidden");
+  $("results").classList.remove("hidden");
+  $("pfill").style.width = "100%";
+
+  $("scoreNum").textContent = total;
+  const band = [...BANDS].reverse().find(b => total >= b.min) || BANDS[0];
+  $("scoreBand").textContent = "// " + band.label;
+  $("scoreSub").textContent = band.blurb;
+
+  const colorFor = (s) => s <= 6 ? "var(--red)" : s <= 9 ? "var(--amber)" : "var(--emerald)";
+  const levelFor = (s) => s <= 6 ? "low" : s <= 9 ? "mid" : "high";
+
+  const dimsBox = $("dims");
+  dimsBox.innerHTML = "";
+  DIMENSIONS.forEach((d, di) => {
+    const s = raw[di];               // 3-12
+    const pct = Math.round((s / 12) * 100);
+    const row = document.createElement("div");
+    row.className = "dimrow";
+    row.innerHTML = `
+      <div class="top"><b>${d.name}</b><span class="pct">${s}/12</span></div>
+      <div class="dbar"><i style="background:${colorFor(s)}"></i></div>
+      <div class="note">${NOTES[levelFor(s)][di]}</div>`;
+    dimsBox.appendChild(row);
+    requestAnimationFrame(() => { row.querySelector("i").style.width = pct + "%"; });
+  });
+
+  window._lastResult = { total, band: band.label, raw };
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function flashBtn(msg){
+  const btns = document.querySelectorAll("#results .btn-primary");
+  const b = btns[btns.length-1];
+  const old = b.dataset.label || b.textContent;
+  b.dataset.label = old;
+  b.textContent = msg;
+  setTimeout(()=>{ b.textContent = b.dataset.label; }, 1700);
+}
+
+function showManualCopy(text){
+  let box = document.getElementById("copybox");
+  if(!box){
+    box = document.createElement("div");
+    box.id = "copybox";
+    box.style.marginTop = "16px";
+    box.innerHTML =
+      '<p style="font-size:.86rem;color:var(--slate);margin-bottom:8px">'
+      + 'Copying is blocked in this view — tap inside, select all, and copy:</p>'
+      + '<textarea readonly style="width:100%;min-height:150px;border:1px solid var(--line);'
+      + 'border-radius:11px;padding:14px;font-family:JetBrains Mono,monospace;font-size:.82rem;'
+      + 'color:var(--ink);background:var(--panel);resize:vertical"></textarea>';
+    const navrow = document.querySelector("#results .navrow");
+    navrow.parentNode.insertBefore(box, navrow.nextSibling);
+  }
+  const ta = box.querySelector("textarea");
+  ta.value = text;
+  ta.focus();
+  ta.select();
+}
+
+function copyShare(){
+  const r = window._lastResult;
+  if(!r) return;
+  const lines = DIMENSIONS.map((d,i)=>`${d.name}: ${r.raw[i]}/12`).join("\n");
+  const text = `QA Maturity score: ${r.total}/60 (${r.band})\n\n${lines}\n\nAligned with ISTQB CTFL 4.0, CT-AI, and CT-GenAI principles.`;
+
+  // 1) Modern clipboard API (needs HTTPS / localhost)
+  if (navigator.clipboard && window.isSecureContext){
+    navigator.clipboard.writeText(text)
+      .then(()=> flashBtn("Copied \u2713"))
+      .catch(()=> legacyCopy(text));
+    return;
+  }
+  legacyCopy(text);
+
+  function legacyCopy(t){
+    // 2) execCommand fallback (works on file:// and older browsers)
+    try {
+      const ta = document.createElement("textarea");
+      ta.value = t;
+      ta.style.position = "fixed";
+      ta.style.top = "-1000px";
+      document.body.appendChild(ta);
+      ta.focus(); ta.select();
+      const ok = document.execCommand("copy");
+      document.body.removeChild(ta);
+      if (ok){ flashBtn("Copied \u2713"); return; }
+    } catch(e){ /* fall through */ }
+    // 3) Last resort: show a selectable box
+    showManualCopy(t);
+    flashBtn("Copy below \u2193");
+  }
+}
+
+function restart(){
+  answers.fill(null);
+  current = 0;
+  $("results").classList.add("hidden");
+  $("intro").classList.remove("hidden");
+  $("pfill").style.width = "0%";
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+</script>
+</body>
+</html>
