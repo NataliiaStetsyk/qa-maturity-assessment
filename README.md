@@ -2,7 +2,7 @@
 
 A structured, interactive self-assessment that scores a team's QA maturity across five dimensions — grounded in ISTQB Foundation Level (CTFL 4.0) principles and the AI testing specialist syllabuses.
 
-**[Take the assessment →](https://nataliiastetsyk.github.io/qa-maturity-assessment.html)**
+**[Take the assessment →](https://nataliiastetsyk.github.io/qa-maturity-assessment/index.html)**
 
 ---
 
